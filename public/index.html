@@ -113,6 +113,45 @@
     </div>
 
     <script>
+        async function handleSend() {
+            const message = userInput.value.trim();
+            if (!message) return;
+    
+            addMessage('user', message);
+            userInput.value = '';
+            sendBtn.disabled = true;
+    
+            try {
+                const response = await fetch('/.netlify/functions/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        model: 'deepseek/deepseek-r1:free'
+                    })
+                });
+    
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || `Error ${response.status}`);
+                }
+    
+                if (!data.reply) throw new Error('Empty response');
+                addMessage('bot', data.reply);
+    
+            } catch (error) {
+                addMessage('error', `Error: ${error.message}`);
+                console.error("Frontend Error:", error);
+            } finally {
+                sendBtn.disabled = false;
+            }
+        }
+    </script>
+
+    <script>
         const chatMessages = document.getElementById('chat-messages');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
