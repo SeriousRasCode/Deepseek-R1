@@ -1,5 +1,4 @@
 [build]
-  command = "npm run build"
   functions = "netlify/functions"
   publish = "public"
 
@@ -7,3 +6,6 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[functions]
+  node_bundler = "esbuild"

@@ -1,5 +1,5 @@
 {
-  "name": "deepseek_r1",
+  "name": "deepseek-r1",
   "version": "1.0.0",
   "scripts": {
     "build": "echo 'Build complete'"

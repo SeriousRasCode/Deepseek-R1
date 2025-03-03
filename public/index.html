@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chat</title>
+    <title>DeepSeek-R1 Assistant</title>
     <style>
         :root {
             --primary: #1a1a1a;
@@ -14,11 +14,12 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0;
             padding: 20px;
             background-color: var(--primary);
             color: var(--text);
+            line-height: 1.6;
         }
 
         #chat-container {
@@ -26,7 +27,7 @@
             margin: 0 auto;
             background-color: var(--secondary);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
         }
 
         #chat-messages {
@@ -36,9 +37,10 @@
         }
 
         .message {
-            margin: 10px 0;
-            padding: 15px;
+            margin: 15px 0;
+            padding: 15px 20px;
             border-radius: 8px;
+            animation: fadeIn 0.3s ease;
         }
 
         .user-message {
@@ -49,6 +51,14 @@
         .bot-message {
             background: #4a4a4a;
             margin-right: 20%;
+            white-space: pre-wrap;
+        }
+
+        .error-message {
+            background: var(--error);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
         }
 
         #input-container {
@@ -65,6 +75,7 @@
             border-radius: 8px;
             background: #333;
             color: var(--text);
+            font-size: 16px;
         }
 
         button {
@@ -74,6 +85,21 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -81,7 +107,7 @@
     <div id="chat-container">
         <div id="chat-messages"></div>
         <div id="input-container">
-            <input type="text" id="user-input" placeholder="Type your message...">
+            <input type="text" id="user-input" placeholder="Ask me anything...">
             <button id="send-btn">Send</button>
         </div>
     </div>
@@ -111,24 +137,27 @@
                     })
                 });
 
-                const data = await response.json();
-                
-                if (!response.ok) throw new Error(data.error || 'Request failed');
-                if (!data.reply) throw new Error('Invalid response');
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'API request failed');
+                }
 
+                const data = await response.json();
                 addMessage('bot', data.reply);
+
             } catch (error) {
                 addMessage('error', `Error: ${error.message}`);
+                console.error('API Error:', error);
             } finally {
                 sendBtn.disabled = false;
             }
         }
 
         function addMessage(type, content) {
-            const div = document.createElement('div');
-            div.className = `message ${type}-message`;
-            div.textContent = content;
-            chatMessages.appendChild(div);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}-message`;
+            messageDiv.textContent = content;
+            chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
