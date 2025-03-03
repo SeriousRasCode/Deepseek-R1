@@ -48,15 +48,15 @@ Contributions are welcome! Please follow these steps to contribute:
 5. Open a pull request.
 
 ## License
-This project is licensed under the [insert license here] - see the [LICENSE](LICENSE) file for details.
+Free to use.
 
 ## Acknowledgements
-[Provide any acknowledgements or credits here, such as libraries or contributors you want to thank]
+openrouter.ai for api integration
 
 ## Contact
 For any questions or feedback, please contact [Tedros Teshome] at [Tedroszion@gmail.com].
 
-##🔍 Live Demo
+## 🔍 Live Demo
 Experience the assistant live:
 https://deepseekted.netlify.app/
 
